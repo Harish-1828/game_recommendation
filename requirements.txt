@@ -1,0 +1,10 @@
+# Core Dependencies
+flask==3.0.0
+pandas==2.1.4
+numpy==1.26.2
+scikit-learn==1.3.2
+
+# Additional Dependencies
+werkzeug==3.0.1
+
+# Note: No additional packages needed for charts - using CDN-based Chart.js in templates

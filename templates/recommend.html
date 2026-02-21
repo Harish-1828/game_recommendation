@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Recommendations - Steam Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1b2838 50%, #2a475e 100%);
+            color: #c7d5e0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px 0;
+            border-bottom: 3px solid #66c0f4;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #66c0f4, #417a9b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            background: linear-gradient(90deg, #66c0f4, #417a9b);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 192, 244, 0.5);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: #66c0f4;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: #8f98a0;
+        }
+
+        .form-card {
+            background: rgba(27, 40, 56, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid rgba(102, 192, 244, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 35px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.3em;
+            color: #66c0f4;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .help-text {
+            color: #8f98a0;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 15px;
+            background: #171a21;
+            border: 2px solid #2a475e;
+            border-radius: 12px;
+            color: #c7d5e0;
+            font-size: 1.1em;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #66c0f4;
+            box-shadow: 0 0 15px rgba(102, 192, 244, 0.3);
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #f44336, #ff9800, #4caf50);
+            outline: none;
+            padding: 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #66c0f4;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(102, 192, 244, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #66c0f4;
+            cursor: pointer;
+            border: none;
+        }
+
+        .value-display {
+            font-size: 1.5em;
+            color: #66c0f4;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: right;
+        }
+
+        .price-display {
+            font-size: 1.5em;
+            color: #4caf50;
+            font-weight: bold;
+            min-width: 90px;
+            text-align: right;
+        }
+
+        .tags-input {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .tag-suggestion {
+            padding: 10px 18px;
+            background: rgba(42, 71, 94, 0.6);
+            border: 2px solid  #2a475e;
+            border-radius: 20px;
+            color: #8f98a0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        .tag-suggestion:hover, .tag-suggestion.selected {
+            background: rgba(102, 192, 244, 0.2);
+            border-color: #66c0f4;
+            color: #66c0f4;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn-submit {
+            padding: 18px 60px;
+            font-size: 1.4em;
+            background: linear-gradient(90deg, #ff6b6b, #d63031);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #66c0f4, #417a9b);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🎮 Steam Store</a>
+            <a href="/" class="btn">← Back to Store</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>🎯 Find Your Perfect Game</h1>
+            <p>Answer a few questions and we'll recommend games tailored to your preferences</p>
+        </div>
+
+        <div class="form-card">
+            <form action="/get_recommendations" method="post">
+                <!-- Question 1: Genre -->
+                <div class="form-group">
+                    <label>
+                        <span class="question-number">1</span>
+                        What genre do you prefer?
+                    </label>
+                    <p class="help-text">Select the type of games you enjoy most</p>
+                    <select name="genre" required>
+                        <option value="">-- Select a Genre --</option>
+                        <option value="Any">Any Genre</option>
+                        {% for genre in genres %}
+                        <option value="{{ genre }}">{{ genre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Question 2: Minimum Rating -->
+                <div class="form-group">
+                    <label>
+                        <span class="question-number">2</span>
+                        Minimum acceptable rating?
+                    </label>
+                    <p class="help-text">Only show games with at least this rating</p>
+                    <div class="range-container">
+                        <input type="range" 
+                               name="min_rating" 
+                               id="ratingSlider" 
+                               min="0" 
+                               max="100" 
+                               value="70"
+                               step="5">
+                        <span class="value-display" id="ratingValue">70%</span>
+                    </div>
+                </div>
+
+                <!-- Question 3: Price Range -->
+                <div class="form-group">
+                    <label>
+                        <span class="question-number">3</span>
+                        Maximum price you're willing to pay?
+                    </label>
+                    <p class="help-text">Set your budget for games</p>
+                    <div class="range-container">
+                        <input type="range" 
+                               name="max_price" 
+                               id="priceSlider" 
+                               min="0" 
+                               max="6000" 
+                               value="5000"
+                               step="250">
+                        <span class="price-display" id="priceValue">₹5000</span>
+                    </div>
+                </div>
+
+                <!-- Question 4: Preferred Tags -->
+                <div class="form-group">
+                    <label>
+                        <span class="question-number">4</span>
+                        What gameplay features do you enjoy?
+                    </label>
+                    <p class="help-text">Click tags that interest you (optional)</p>
+                    <input type="hidden" name="tags" id="selectedTags">
+                    <div class="tags-input">
+                        <div class="tag-suggestion" data-tag="open world">Open World</div>
+                        <div class="tag-suggestion" data-tag="multiplayer">Multiplayer</div>
+                        <div class="tag-suggestion" data-tag="story rich">Story Rich</div>
+                        <div class="tag-suggestion" data-tag="co-op">Co-op</div>
+                        <div class="tag-suggestion" data-tag="difficult">Challenging</div>
+                        <div class="tag-suggestion" data-tag="casual">Casual</div>
+                        <div class="tag-suggestion" data-tag="indie">Indie</div>
+                        <div class="tag-suggestion" data-tag="puzzle">Puzzle</div>
+                        <div class="tag-suggestion" data-tag="survival">Survival</div>
+                        <div class="tag-suggestion" data-tag="fantasy">Fantasy</div>
+                        <div class="tag-suggestion" data-tag="sci-fi">Sci-Fi</div>
+                        <div class="tag-suggestion" data-tag="horror">Horror</div>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="btn-submit">
+                        🎮 Get My Recommendations
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Rating slider
+        const ratingSlider = document.getElementById('ratingSlider');
+        const ratingValue = document.getElementById('ratingValue');
+        ratingSlider.addEventListener('input', function() {
+            ratingValue.textContent = this.value + '%';
+        });
+
+        // Price slider
+        const priceSlider = document.getElementById('priceSlider');
+        const priceValue = document.getElementById('priceValue');
+        priceSlider.addEventListener('input', function() {
+            if (this.value == 0) {
+                priceValue.textContent = 'Free';
+            } else {
+                priceValue.textContent = '₹' + this.value;
+            }
+        });
+
+        // Tags selection
+        const tagSuggestions = document.querySelectorAll('.tag-suggestion');
+        const selectedTagsInput = document.getElementById('selectedTags');
+        const selectedTags = new Set();
+
+        tagSuggestions.forEach(tag => {
+            tag.addEventListener('click', function() {
+                const tagValue = this.getAttribute('data-tag');
+                
+                if (selectedTags.has(tagValue)) {
+                    selectedTags.delete(tagValue);
+                    this.classList.remove('selected');
+                } else {
+                    selectedTags.add(tagValue);
+                    this.classList.add('selected');
+                }
+                
+                selectedTagsInput.value = Array.from(selectedTags).join(',');
+            });
+        });
+    </script>
+</body>
+</html>

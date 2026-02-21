@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Steam Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1b2838 50%, #2a475e 100%);
+            color: #c7d5e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .error-container {
+            text-align: center;
+            max-width: 600px;
+            background: rgba(27, 40, 56, 0.9);
+            border-radius: 20px;
+            padding: 60px 40px;
+            border: 2px solid rgba(244, 67, 54, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .error-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #f44336;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: #c7d5e0;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #66c0f4, #417a9b);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 192, 244, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #8f98a0, #5a6268);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <h1>Oops! Something Went Wrong</h1>
+        <p class="error-message">
+            {{ message if message else "We encountered an unexpected error. Please try again." }}
+        </p>
+        <div>
+            <a href="/" class="btn">🏠 Go to Homepage</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">← Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

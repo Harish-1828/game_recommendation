@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Game Store - Discover & Explore Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1b2838 50%, #2a475e 100%);
+            color: #c7d5e0;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px 0;
+            border-bottom: 3px solid #66c0f4;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #66c0f4, #417a9b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #2a475e;
+            border-radius: 25px;
+            background: #171a21;
+            color: #c7d5e0;
+            font-size: 1em;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #66c0f4;
+            box-shadow: 0 0 15px rgba(102, 192, 244, 0.3);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #66c0f4, #417a9b);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 192, 244, 0.5);
+        }
+
+        .btn-recommend {
+            background: linear-gradient(90deg, #ff6b6b, #d63031);
+            color: white;
+            font-size: 1.1em;
+            padding: 15px 35px;
+        }
+
+        .btn-recommend:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #66c0f4;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: #8f98a0;
+            margin-bottom: 30px;
+        }
+
+        /* Filter Section */
+        .filters {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(42, 71, 94, 0.6);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            color: #c7d5e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(102, 192, 244, 0.2);
+            border-color: #66c0f4;
+            color: #66c0f4;
+        }
+
+        /* Games Grid */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: rgba(27, 40, 56, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #66c0f4;
+            box-shadow: 0 10px 30px rgba(102, 192, 244, 0.4);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1b2838, #2a475e);
+        }
+
+        .game-info {
+            padding: 20px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .game-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .game-rating {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .rating-orange {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
+        .rating-red {
+            background: linear-gradient(135deg, #f44336, #c62828);
+        }
+
+        .game-genre {
+            display: inline-block;
+            background: rgba(102, 192, 244, 0.2);
+            border: 1px solid #66c0f4;
+            color: #66c0f4;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .game-description {
+            color: #8f98a0;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 15px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 15px 0;
+        }
+
+        .tag {
+            background: rgba(42, 71, 94, 0.6);
+            color: #8f98a0;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(102, 192, 244, 0.2);
+        }
+
+        .game-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #66c0f4;
+        }
+
+        .price-free {
+            color: #4caf50;
+        }
+
+        .view-btn {
+            background: linear-gradient(90deg, #66c0f4, #417a9b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 192, 244, 0.5);
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .no-results h2 {
+            color: #66c0f4;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .no-results p {
+            color: #8f98a0;
+            font-size: 1.2em;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 2px solid #66c0f4;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            color: #8f98a0;
+            margin: 5px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            .search-container {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">🎮 Steam Store</a>
+            
+            <form action="/search" method="get" class="search-container">
+                <input type="text" 
+                       name="q" 
+                       class="search-input" 
+                       placeholder="Search for games..." 
+                       value="{{ search_query if search_query else '' }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            
+            <a href="/recommend" class="btn btn-recommend">🎯 Get Recommendations</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Discover Amazing Games</h1>
+        <p>Browse thousands of games, read reviews, and find your next adventure</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% if search_query %}
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="color: #66c0f4;">Search Results for "{{ search_query }}"</h2>
+            <p style="color: #8f98a0;">Found {{ games|length }} game(s)</p>
+        </div>
+        {% endif %}
+
+        {% if games %}
+        <!-- Games Grid -->
+        <div class="games-grid">
+            {% for game in games %}
+            <div class="game-card" onclick="window.location.href='/game/{{ game.id }}'">
+                <img src="{{ game.image }}" alt="{{ game.name }}" class="game-image">
+                
+                <div class="game-info">
+                    <div class="game-header">
+                        <div>
+                            <div class="game-title">{{ game.name }}</div>
+                            <span class="game-genre">{{ game.genre }}</span>
+                        </div>
+                        <div class="game-rating {% if game.rating < 70 %}rating-red{% elif game.rating < 85 %}rating-orange{% endif %}">
+                            {{ game.rating }}%
+                        </div>
+                    </div>
+                    
+                    <div class="game-description">
+                        {{ game.description }}
+                    </div>
+                    
+                    <div class="game-tags">
+                        {% for tag in game.tags[:3] %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="game-footer">
+                        <div class="game-price {% if game.price == 0 %}price-free{% endif %}">
+                            {% if game.price == 0 %}
+                            Free
+                            {% else %}
+                            ₹{{ game.price }}
+                            {% endif %}
+                        </div>
+                        <a href="/game/{{ game.id }}" class="view-btn" onclick="event.stopPropagation()">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <h2>No Games Found</h2>
+            <p>Try adjusting your search or browse all games</p>
+            <a href="/" class="btn btn-primary" style="margin-top: 20px;">View All Games</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><strong>Steam Game Store</strong> - Powered by Machine Learning</p>
+        <p>Discover, Review, and Enjoy Your Gaming Experience</p>
+        <p style="margin-top: 15px; font-size: 0.9em;">© 2026 Steam Store | Built with Flask, Python & AI</p>
+    </footer>
+</body>
+</html>
