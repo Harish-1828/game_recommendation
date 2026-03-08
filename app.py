@@ -25,6 +25,17 @@ except FileNotFoundError:
     model = None
     vectorizer = None
 
+# Load genre prediction model (KNN)
+print("Loading genre prediction model...")
+try:
+    genre_model = pickle.load(open("genre_knn_model.pkl", "rb"))
+    genre_scaler = pickle.load(open("genre_scaler.pkl", "rb"))
+    print("✓ Genre prediction model loaded successfully!")
+except FileNotFoundError:
+    print("WARNING: Genre prediction model not found.")
+    genre_model = None
+    genre_scaler = None
+
 # Load review data
 try:
     reviews_df = pd.read_csv("steam_reviews.csv", nrows=10000)
@@ -220,6 +231,85 @@ def analyze_review():
             "is_positive": is_positive,
             "confidence": round(confidence, 2),
             "sentiment": "Positive" if is_positive else "Negative"
+        })
+    
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        })
+
+@app.route("/predict_genre", methods=["POST"])
+def predict_genre():
+    """Predict user's preferred genre using KNN based on questionnaire"""
+    try:
+        if not genre_model or not genre_scaler:
+            return jsonify({
+                "success": False,
+                "error": "Genre prediction model not available"
+            })
+        
+        data = request.json
+        
+        # Extract questionnaire responses
+        # [playtime_preference, multiplayer_preference, pace_preference, budget, story_importance]
+        playtime = int(data.get("playtime", 2))
+        multiplayer = int(data.get("multiplayer", 2))
+        pace = int(data.get("pace", 2))
+        budget = int(data.get("budget", 2))
+        story = int(data.get("story", 2))
+        
+        # Create feature array
+        features = np.array([[playtime, multiplayer, pace, budget, story]])
+        
+        # Scale features
+        features_scaled = genre_scaler.transform(features)
+        
+        # Predict genre
+        predicted_genre = genre_model.predict(features_scaled)[0]
+        probabilities = genre_model.predict_proba(features_scaled)[0]
+        confidence = float(max(probabilities)) * 100
+        
+        # Get top game from predicted genre
+        all_games = get_all_games()
+        genre_games = [g for g in all_games if g["genre"] == predicted_genre]
+        
+        if genre_games:
+            # Sort by rating and get top game
+            genre_games.sort(key=lambda x: x["rating"], reverse=True)
+            top_game = genre_games[0]
+            
+            # Get top 3 games for variety
+            top_games = genre_games[:min(3, len(genre_games))]
+        else:
+            # Fallback to highest rated game overall
+            all_games.sort(key=lambda x: x["rating"], reverse=True)
+            top_game = all_games[0]
+            top_games = all_games[:3]
+            predicted_genre = top_game["genre"]
+        
+        return jsonify({
+            "success": True,
+            "predicted_genre": predicted_genre,
+            "confidence": round(confidence, 2),
+            "top_game": {
+                "id": top_game["id"],
+                "name": top_game["name"],
+                "genre": top_game["genre"],
+                "price": top_game["price"],
+                "rating": top_game["rating"],
+                "image": top_game["image"],
+                "description": top_game["description"]
+            },
+            "alternative_games": [
+                {
+                    "id": g["id"],
+                    "name": g["name"],
+                    "rating": g["rating"],
+                    "price": g["price"]
+                }
+                for g in top_games[1:]
+            ]
         })
     
     except Exception as e:

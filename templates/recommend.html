@@ -258,136 +258,221 @@
     <div class="container">
         <div class="hero">
             <h1>🎯 Find Your Perfect Game</h1>
-            <p>Answer a few questions and we'll recommend games tailored to your preferences</p>
+            <p>Answer 5 quick questions - We'll use AI to predict your ideal genre!</p>
         </div>
 
-        <div class="form-card">
-            <form action="/get_recommendations" method="post">
-                <!-- Question 1: Genre -->
+        <div class="form-card" id="questionnaireCard">
+            <form id="genreForm">
+                <!-- Question 1: Playtime Preference -->
                 <div class="form-group">
                     <label>
                         <span class="question-number">1</span>
-                        What genre do you prefer?
+                        How much time do you typically spend gaming per week?
                     </label>
-                    <p class="help-text">Select the type of games you enjoy most</p>
-                    <select name="genre" required>
-                        <option value="">-- Select a Genre --</option>
-                        <option value="Any">Any Genre</option>
-                        {% for genre in genres %}
-                        <option value="{{ genre }}">{{ genre }}</option>
-                        {% endfor %}
+                    <p class="help-text">This helps us understand your gaming dedication</p>
+                    <select name="playtime" id="playtime" required>
+                        <option value="">-- Select --</option>
+                        <option value="1">Casual - Less than 10 hours per week</option>
+                        <option value="2">Moderate - 10 to 20 hours per week</option>
+                        <option value="3">Hardcore - More than 20 hours per week</option>
                     </select>
                 </div>
 
-                <!-- Question 2: Minimum Rating -->
+                <!-- Question 2: Multiplayer Preference -->
                 <div class="form-group">
                     <label>
                         <span class="question-number">2</span>
-                        Minimum acceptable rating?
+                        Do you prefer playing solo or with others?
                     </label>
-                    <p class="help-text">Only show games with at least this rating</p>
-                    <div class="range-container">
-                        <input type="range" 
-                               name="min_rating" 
-                               id="ratingSlider" 
-                               min="0" 
-                               max="100" 
-                               value="70"
-                               step="5">
-                        <span class="value-display" id="ratingValue">70%</span>
-                    </div>
+                    <p class="help-text">Your social gaming preference</p>
+                    <select name="multiplayer" id="multiplayer" required>
+                        <option value="">-- Select --</option>
+                        <option value="1">Solo only - I prefer single-player experiences</option>
+                        <option value="2">Mixed - I enjoy both solo and multiplayer</option>
+                        <option value="3">Multiplayer focused - I love playing with others</option>
+                    </select>
                 </div>
 
-                <!-- Question 3: Price Range -->
+                <!-- Question 3: Pace Preference -->
                 <div class="form-group">
                     <label>
                         <span class="question-number">3</span>
-                        Maximum price you're willing to pay?
+                        What game pace do you prefer?
                     </label>
-                    <p class="help-text">Set your budget for games</p>
-                    <div class="range-container">
-                        <input type="range" 
-                               name="max_price" 
-                               id="priceSlider" 
-                               min="0" 
-                               max="6000" 
-                               value="5000"
-                               step="250">
-                        <span class="price-display" id="priceValue">₹5000</span>
-                    </div>
+                    <p class="help-text">The intensity and speed of gameplay</p>
+                    <select name="pace" id="pace" required>
+                        <option value="">-- Select --</option>
+                        <option value="1">Relaxed - Take my time, no pressure</option>
+                        <option value="2">Balanced - Good mix of action and strategy</option>
+                        <option value="3">Fast-paced - Intense, adrenaline-pumping action</option>
+                    </select>
                 </div>
 
-                <!-- Question 4: Preferred Tags -->
+                <!-- Question 4: Budget -->
                 <div class="form-group">
                     <label>
                         <span class="question-number">4</span>
-                        What gameplay features do you enjoy?
+                        What's your typical game budget?
                     </label>
-                    <p class="help-text">Click tags that interest you (optional)</p>
-                    <input type="hidden" name="tags" id="selectedTags">
-                    <div class="tags-input">
-                        <div class="tag-suggestion" data-tag="open world">Open World</div>
-                        <div class="tag-suggestion" data-tag="multiplayer">Multiplayer</div>
-                        <div class="tag-suggestion" data-tag="story rich">Story Rich</div>
-                        <div class="tag-suggestion" data-tag="co-op">Co-op</div>
-                        <div class="tag-suggestion" data-tag="difficult">Challenging</div>
-                        <div class="tag-suggestion" data-tag="casual">Casual</div>
-                        <div class="tag-suggestion" data-tag="indie">Indie</div>
-                        <div class="tag-suggestion" data-tag="puzzle">Puzzle</div>
-                        <div class="tag-suggestion" data-tag="survival">Survival</div>
-                        <div class="tag-suggestion" data-tag="fantasy">Fantasy</div>
-                        <div class="tag-suggestion" data-tag="sci-fi">Sci-Fi</div>
-                        <div class="tag-suggestion" data-tag="horror">Horror</div>
-                    </div>
+                    <p class="help-text">How much are you willing to spend on games?</p>
+                    <select name="budget" id="budget" required>
+                        <option value="">-- Select --</option>
+                        <option value="1">Free or Cheap - Under ₹1,000</option>
+                        <option value="2">Mid-range - ₹1,000 to ₹3,000</option>
+                        <option value="3">Premium - Over ₹3,000</option>
+                    </select>
+                </div>
+
+                <!-- Question 5: Story Importance -->
+                <div class="form-group">
+                    <label>
+                        <span class="question-number">5</span>
+                        How important is the story to you?
+                    </label>
+                    <p class="help-text">Does narrative matter in your games?</p>
+                    <select name="story" id="story" required>
+                        <option value="">-- Select --</option>
+                        <option value="1">Not important - Just want fun gameplay</option>
+                        <option value="2">Nice to have - Story adds value</option>
+                        <option value="3">Very important - I play for the narrative</option>
+                    </select>
                 </div>
 
                 <div class="submit-section">
-                    <button type="submit" class="btn-submit">
-                        🎮 Get My Recommendations
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        🤖 Predict My Genre with AI
                     </button>
                 </div>
             </form>
         </div>
+
+        <!-- Result Card (Hidden initially) -->
+        <div class="form-card" id="resultCard" style="display: none;">
+            <div style="text-align: center;">
+                <h2 style="color: #66c0f4; font-size: 2.5em; margin-bottom: 20px;">
+                    🎉 Perfect Match Found!
+                </h2>
+                
+                <div style="background: rgba(102, 192, 244, 0.1); padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 2px solid #66c0f4;">
+                    <p style="font-size: 1.2em; color: #8f98a0; margin-bottom: 10px;">
+                        Our AI predicts you'll love:
+                    </p>
+                    <h3 id="predictedGenre" style="color: #66c0f4; font-size: 2em; margin-bottom: 10px;"></h3>
+                    <p style="color: #4caf50; font-size: 1.1em;">
+                        <span id="confidence"></span>% match confidence
+                    </p>
+                </div>
+
+                <div id="gameCard" style="background: rgba(27, 40, 56, 0.9); border-radius: 15px; overflow: hidden; border: 2px solid rgba(102, 192, 244, 0.3); margin-bottom: 30px;">
+                    <!-- Game details will be inserted here -->
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a id="gameLink" href="#" class="btn" style="padding: 15px 40px; font-size: 1.2em;">
+                        🎮 View Full Details
+                    </a>
+                    <button onclick="location.reload()" class="btn" style="padding: 15px 40px; font-size: 1.2em; background: linear-gradient(90deg, #8f98a0, #5f6a72);">
+                        🔄 Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Rating slider
-        const ratingSlider = document.getElementById('ratingSlider');
-        const ratingValue = document.getElementById('ratingValue');
-        ratingSlider.addEventListener('input', function() {
-            ratingValue.textContent = this.value + '%';
-        });
+        const form = document.getElementById('genreForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const questionnaireCard = document.getElementById('questionnaireCard');
+        const resultCard = document.getElementById('resultCard');
 
-        // Price slider
-        const priceSlider = document.getElementById('priceSlider');
-        const priceValue = document.getElementById('priceValue');
-        priceSlider.addEventListener('input', function() {
-            if (this.value == 0) {
-                priceValue.textContent = 'Free';
-            } else {
-                priceValue.textContent = '₹' + this.value;
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Validate all fields
+            const playtime = document.getElementById('playtime').value;
+            const multiplayer = document.getElementById('multiplayer').value;
+            const pace = document.getElementById('pace').value;
+            const budget = document.getElementById('budget').value;
+            const story = document.getElementById('story').value;
+
+            if (!playtime || !multiplayer || !pace || !budget || !story) {
+                alert('Please answer all questions!');
+                return;
             }
-        });
 
-        // Tags selection
-        const tagSuggestions = document.querySelectorAll('.tag-suggestion');
-        const selectedTagsInput = document.getElementById('selectedTags');
-        const selectedTags = new Set();
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = '🤖 AI is thinking...';
 
-        tagSuggestions.forEach(tag => {
-            tag.addEventListener('click', function() {
-                const tagValue = this.getAttribute('data-tag');
-                
-                if (selectedTags.has(tagValue)) {
-                    selectedTags.delete(tagValue);
-                    this.classList.remove('selected');
+            try {
+                const response = await fetch('/predict_genre', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        playtime: parseInt(playtime),
+                        multiplayer: parseInt(multiplayer),
+                        pace: parseInt(pace),
+                        budget: parseInt(budget),
+                        story: parseInt(story)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Display results
+                    document.getElementById('predictedGenre').textContent = data.predicted_genre;
+                    document.getElementById('confidence').textContent = data.confidence;
+                    
+                    const game = data.top_game;
+                    const gameCardHTML = `
+                        <img src="${game.image}" alt="${game.name}" style="width: 100%; height: 250px; object-fit: cover;">
+                        <div style="padding: 30px;">
+                            <h3 style="color: #ffffff; font-size: 2em; margin-bottom: 15px;">${game.name}</h3>
+                            <div style="display: flex; justify-content: space-around; margin: 20px 0; flex-wrap: wrap; gap: 15px;">
+                                <div style="text-align: center;">
+                                    <p style="color: #8f98a0; font-size: 0.9em;">Genre</p>
+                                    <p style="color: #66c0f4; font-size: 1.3em; font-weight: bold;">${game.genre}</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: #8f98a0; font-size: 0.9em;">Rating</p>
+                                    <p style="color: #4caf50; font-size: 1.3em; font-weight: bold;">${game.rating}%</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: #8f98a0; font-size: 0.9em;">Price</p>
+                                    <p style="color: ${game.price === 0 ? '#4caf50' : '#66c0f4'}; font-size: 1.3em; font-weight: bold;">
+                                        ${game.price === 0 ? 'Free' : '₹' + game.price}
+                                    </p>
+                                </div>
+                            </div>
+                            <p style="color: #c7d5e0; font-size: 1.1em; line-height: 1.6;">${game.description}</p>
+                        </div>
+                    `;
+                    
+                    document.getElementById('gameCard').innerHTML = gameCardHTML;
+                    document.getElementById('gameLink').href = `/game/${game.id}`;
+
+                    // Hide questionnaire, show results
+                    questionnaireCard.style.display = 'none';
+                    resultCard.style.display = 'block';
+                    
+                    // Smooth scroll to results
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
                 } else {
-                    selectedTags.add(tagValue);
-                    this.classList.add('selected');
+                    alert('Error: ' + data.error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🤖 Predict My Genre with AI';
                 }
-                
-                selectedTagsInput.value = Array.from(selectedTags).join(',');
-            });
+
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+                console.error(error);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🤖 Predict My Genre with AI';
+            }
         });
     </script>
 </body>
